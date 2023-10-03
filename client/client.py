@@ -1,7 +1,15 @@
 import bluetooth
+import argparse
 
-server_address = "XX:XX:XX:XX:XX:XX"        # replace this with your server's bluetooth MAC address
-port = 1                                    # replace this with the port that the server runs on
+# Create an ArgumentParser to parse the command-line arguments
+parser = argparse.ArgumentParser(description='Bluetooth client script')
+parser.add_argument('server_address', type=str, help='Server Bluetooth device address')
+parser.add_argument('port', type=int, help='Port number to connect to')
+args = parser.parse_args()
+
+# Retrieve the server address and port from the command-line arguments
+server_address = args.server_address        # format: "XX:XX:XX:XX:XX:XX"
+port = args.port
 
 client_socket = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
 

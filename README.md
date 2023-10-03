@@ -44,11 +44,12 @@ Once you see the message "Waiting for a Bluetooth connection on port X" (where X
 
 1. Navigate to the "client" directory on your Raspberry Pi.
 
-2. Run the following command to start the client, replacing {port} with the actual port number displayed on the server:
+2. Run the following command to start the client, replacing {bluetooth_device_address} with your computer's bluetooth device address (format XX:XX:XX:XX:XX:XX) and {port} with the actual port number displayed on the server:
 
 ```bash
-python3 client.py {port}
+python3 client.py {bluetooth_device_address} {port}
 ```
+
 The client will attempt to connect to the server over Bluetooth.
 
 If the connection is successful, you will be able to see the message "Hello, server!!!" received by the server end.
