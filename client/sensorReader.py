@@ -52,6 +52,7 @@ def readHeartData(sampleDuration=10):
    
     bpmArray = np.empty(0)
     uterineArray = np.empty(0)
+    motherBpmArray = np.empty(0)
 
     current_timestamp = datetime.now()
     
@@ -60,22 +61,27 @@ def readHeartData(sampleDuration=10):
 
     bpmArray = np.append(bpmArray, formatted_timestamp)
     bpmArray = np.append(bpmArray, "HR2")
-    bpmArray = np.append(bpmArray, "external")
+    bpmArray = np.append(bpmArray, "external") "In given datasheet, this is either "external" or "INOP"
     uterineArray = np.append(uterineArray, formatted_timestamp)
     uterineArray = np.append(uterineArray, "UA")
-    uterineArray = np.append(uterineArray, "TOCO")
+    uterineArray = np.append(uterineArray, "TOCO") # In given datasheet, this is either "TOCO" or "No-Trans"
+    motherBpmArray = np.append(motherBpm, formatted_timestamp)
+    motherBpmArray = np.append(motherBpm, "MHR")
+    # No third column tag associated with mother heart rate
 
     # Main loop.
     while (time.time() - initialTime) <= sampleDuration:
         # read from the ADC
         Signal = readADC(0)   # TODO: Select the correct ADC channel. I have selected A0 here
         uterineSignal = readADC(1)
+        # mhrSignal = readADC(0, 1) TODO: Implement reading and processing extra mother heart rate signal
         curTime = int(time.time() * 1000)
 
         sampleCounter += curTime - lastTime     # keep track of the time in mS with this variable
         lastTime = curTime
         N = sampleCounter - lastBeatTime     # monitor the time since the last beat to avoid noise
         # print N, Signal, curTime, sampleCounter, lastBeatTime
+        
         #  find the peak and trough of the pulse wave
         if Signal < thresh and N > (IBI / 5.0) * 3.0:  # avoid dichrotic noise by waiting 3/5 of last IBI
             if Signal < trough:                        # T is the trough
@@ -116,6 +122,7 @@ def readHeartData(sampleDuration=10):
             BPM = 60000/runningTotal               # how many beats can fit into a minute? that's BPM!
             print(f"BPM {BPM}")
             bpmArray = np.append(bpmArray, str(BPM))    # need to cast to string, since we are also sending timestamp
+            motherBpmArray = np.append(motherBpmArray, str(BPM)) # TODO: Read from separate sensor. Currently using the same exact sensor as HR2
             uterineArray = np.append(uterineArray, str(uterineSignal))    # Currently just the voltage read by the ADC from the uterine sensor
 
         if Signal < thresh and Pulse:   # when the values are going down, the beat is over
