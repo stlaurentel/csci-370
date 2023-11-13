@@ -69,6 +69,7 @@ def readHeartData(sampleDuration=10):
     while (time.time() - initialTime) <= sampleDuration:
         # read from the ADC
         Signal = readADC(0)   # TODO: Select the correct ADC channel. I have selected A0 here
+        uterineSignal = readADC(1)
         curTime = int(time.time() * 1000)
 
         sampleCounter += curTime - lastTime     # keep track of the time in mS with this variable
@@ -115,7 +116,7 @@ def readHeartData(sampleDuration=10):
             BPM = 60000/runningTotal               # how many beats can fit into a minute? that's BPM!
             print(f"BPM {BPM}")
             bpmArray = np.append(bpmArray, str(BPM))    # need to cast to string, since we are also sending timestamp
-            uterineArray = np.append(uterineArray, str(BPM))    # THIS WILL BE CHANGED TO ITS OWN VALUE! JUST TESTING WITH SAME DATA FOR NOW
+            uterineArray = np.append(uterineArray, str(uterineSignal))    # Currently just the voltage read by the ADC from the uterine sensor
 
         if Signal < thresh and Pulse:   # when the values are going down, the beat is over
             Pulse = False                         # reset the Pulse flag so we can do it again
