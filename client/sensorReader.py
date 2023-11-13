@@ -1,8 +1,8 @@
-# Write your code here :-)
 import time
 import spidev
 # from time import sleep
 import numpy as np
+from datetime import datetime
 
 
 def baseADC(channel=0, device=0):
@@ -51,6 +51,19 @@ def readHeartData(sampleDuration=10):
     initialTime = time.time()  # Record start time of sample read
    
     bpmArray = np.empty(0)
+    uterineArray = np.empty(0)
+
+    current_timestamp = datetime.now()
+    
+    # Format the timestamp as a string in the desired format
+    formatted_timestamp = current_timestamp.strftime("%m/%d/%y %H:%M:%S")
+
+    bpmArray = np.append(bpmArray, formatted_timestamp)
+    bpmArray = np.append(bpmArray, "HR2")
+    bpmArray = np.append(bpmArray, "external")
+    uterineArray = np.append(uterineArray, formatted_timestamp)
+    uterineArray = np.append(uterineArray, "UA")
+    uterineArray = np.append(uterineArray, "TOCO")
 
     # Main loop.
     while (time.time() - initialTime) <= sampleDuration:
@@ -101,7 +114,8 @@ def readHeartData(sampleDuration=10):
             runningTotal /= 10                     # average the last 10 IBI values
             BPM = 60000/runningTotal               # how many beats can fit into a minute? that's BPM!
             print(f"BPM {BPM}")
-            bpmArray = np.append(bpmArray, BPM)
+            bpmArray = np.append(bpmArray, str(BPM))    # need to cast to string, since we are also sending timestamp
+            uterineArray = np.append(uterineArray, str(BPM))    # THIS WILL BE CHANGED TO ITS OWN VALUE! JUST TESTING WITH SAME DATA FOR NOW
 
         if Signal < thresh and Pulse:   # when the values are going down, the beat is over
             Pulse = False                         # reset the Pulse flag so we can do it again
