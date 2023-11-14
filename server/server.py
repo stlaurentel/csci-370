@@ -1,10 +1,16 @@
+#define PY_SSIZE_T_CLEAN 1
 import bluetooth
+import numpy as np
+import ast
+import re
+import csv
+
 
 server_socket = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
-server_socket.bind(("", bluetooth.PORT_ANY))    # Bind to any available port for RFCOMM
-server_socket.listen(1)                         # Listen for one incoming connection
+server_socket.bind(("", bluetooth.PORT_ANY))  # Bind to any available port for RFCOMM
+server_socket.listen(1)  # Listen for one incoming connection
 
-port = server_socket.getsockname()[1]           # Get the dynamically assigned port
+port = server_socket.getsockname()[1]  # Get the dynamically assigned port
 
 print(f"Waiting for a Bluetooth connection on port {port}...")
 
@@ -17,13 +23,21 @@ try:
         data = client_socket.recv(1024)
         if not data:
             break
-        print("Received:", data.decode())
+        dataString = data.decode()
+        print("Received:", dataString)
+        listof3 = dataString[1:-1].split("][")
+        print("3list:",listof3)
+        #allLists = ast.literal_eval()
+        result = [x.split() for x in listof3]
+        print(result)
+
+        
+        with open('output.csv', 'w', newline='') as csvfile:
+            csv_writer = csv.writer(csvfile)
+            csv_writer.writerows(result)
 
         # Send data back to the client
         # client_socket.send("Hello, client!".encode())
-            # This function will trigger an error to be thrown:
-            # Error: PY_SSIZE_T_CLEAN macro must be defined for '#' formats
-            # This is an issue with pybluez. Need to find a way to fix
         break
 
 except Exception as e:
