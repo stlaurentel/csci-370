@@ -24,6 +24,7 @@ try:
         if not data:
             break
         dataString = data.decode()
+        # dataString format: "['11/13/23 19:32:19' 'HR2' 'external' '100.0' '100.0' '100.0']['11/13/23 19:32:19' 'HR2' 'external' '100.0' '100.0' '100.0']['11/13/23 19:32:19' 'HR2' 'external' '100.0' '100.0' '100.0']"
         print("Received:", dataString)
         listof3 = dataString[1:-1].split("][")
         print("3list:",listof3)
