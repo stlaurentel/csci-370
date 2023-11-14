@@ -25,12 +25,22 @@ try:
             break
         dataString = data.decode()
         # dataString format: "['11/13/23 19:32:19' 'HR2' 'external' '100.0' '100.0' '100.0']['11/13/23 19:32:19' 'HR2' 'external' '100.0' '100.0' '100.0']['11/13/23 19:32:19' 'HR2' 'external' '100.0' '100.0' '100.0']"
-        print("Received:", dataString)
-        listof3 = dataString[1:-1].split("][")
-        print("3list:",listof3)
-        #allLists = ast.literal_eval()
-        result = [x.split() for x in listof3]
-        print(result)
+        # Fix the format by adding commas between elements
+        dataString = dataString.replace(" ", " , ")
+        fixed_data_string = dataString.replace("']['", "'],['")
+        
+        # Now use ast.literal_eval
+        data_list = ast.literal_eval(f"[{fixed_data_string}]")
+        
+        modified_data_list = [[inner[0].replace(',', ' ').split()[0] + ' ' + inner[0].replace(',', ' ').split()[1], inner[1]] + inner[2:] for inner in data_list]
+        
+        # Separate the list of lists into three arrays
+        array1, array2, array3 = modified_data_list
+
+ 
+print("Array 1:", array1)
+print("Array 2:", array2)
+print("Array 3:", array3)
 
         
         with open('output.csv', 'w', newline='') as csvfile:
