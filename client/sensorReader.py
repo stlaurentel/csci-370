@@ -61,12 +61,12 @@ def readHeartData(sampleDuration=10):
 
     bpmArray = np.append(bpmArray, formatted_timestamp)
     bpmArray = np.append(bpmArray, "HR2")
-    bpmArray = np.append(bpmArray, "external") "In given datasheet, this is either "external" or "INOP"
+    bpmArray = np.append(bpmArray, "external") # In given datasheet, this is either "external" or "INOP"
     uterineArray = np.append(uterineArray, formatted_timestamp)
     uterineArray = np.append(uterineArray, "UA")
     uterineArray = np.append(uterineArray, "TOCO") # In given datasheet, this is either "TOCO" or "No-Trans"
-    motherBpmArray = np.append(motherBpm, formatted_timestamp)
-    motherBpmArray = np.append(motherBpm, "MHR")
+    motherBpmArray = np.append(motherBpmArray, formatted_timestamp)
+    motherBpmArray = np.append(motherBpmArray, "MHR")
     # No third column tag associated with mother heart rate
 
     # Main loop.
@@ -141,8 +141,8 @@ def readHeartData(sampleDuration=10):
             secondBeat = False                    # when we get the heartbeat back
             print("no beats found")
 
-        time.sleep(0.005)
-    print(f"Fetal bpm: {bpmArray})
+        time.sleep(0.25)
+    print(f"Fetal bpm: {bpmArray}")
     print(f"Mother bpm: {motherBpmArray}")
     print(f"Uterine activity: {uterineArray}")
     return bpmArray, motherBpmArray, uterineArray
