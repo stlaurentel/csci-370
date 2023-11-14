@@ -1,6 +1,7 @@
 import bluetooth
 import argparse
 import sensorReader
+import numpy as np
 
 
 # Create an ArgumentParser to parse the command-line arguments
@@ -21,9 +22,9 @@ except bluetooth.btcommon.BluetoothError as e:
     print(f"Bluetooth error: {e}")
 
 # For each piece of data read from sensor, send the data
-heartData = sensorReader.readHeartData(15)
-for dataPoint in heartData:
-    client_socket.send(str(dataPoint).encode())
+dataLists = sensorReader.readHeartData(15)
+for data in dataLists:
+    client_socket.send(np.array2string(data).encode())
 
 data = client_socket.recv(1024)
 print(f"Received: {data}")
