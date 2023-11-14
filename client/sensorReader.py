@@ -142,8 +142,10 @@ def readHeartData(sampleDuration=10):
             print("no beats found")
 
         time.sleep(0.005)
-    print(bpmArray)
-    return bpmArray
+    print(f"Fetal bpm: {bpmArray})
+    print(f"Mother bpm: {motherBpmArray}")
+    print(f"Uterine activity: {uterineArray}")
+    return bpmArray, motherBpmArray, uterineArray
 
 
 if __name__ == '__main__':
