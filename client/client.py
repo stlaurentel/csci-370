@@ -2,6 +2,12 @@ import bluetooth
 import argparse
 import sensorReader
 import numpy as np
+import RPi.GPIO as GPIO
+
+# use GPIO numbering
+GPIO.setmode(GPIO.BCM)
+buttonPin = 12
+GPIO.setup(buttonPin, GPIO.IN, pull_up_down = GPIO.PUD_UP)
 
 
 # Create an ArgumentParser to parse the command-line arguments
@@ -17,6 +23,10 @@ port = args.port
 client_socket = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
 
 try:
+    buttonState = GPIO.input(buttonPin))
+    while buttonState != 1:
+        buttonState = GPIO.input(buttonPin))
+    
     client_socket.connect((server_address, port))
 except bluetooth.btcommon.BluetoothError as e:
     print(f"Bluetooth error: {e}")
