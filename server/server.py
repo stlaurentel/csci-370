@@ -27,6 +27,7 @@ try:
         # dataString format: "['11/13/23 19:32:19' 'HR2' 'external' '100.0' '100.0' '100.0']['11/13/23 19:32:19' 'HR2' 'external' '100.0' '100.0' '100.0']['11/13/23 19:32:19' 'HR2' 'external' '100.0' '100.0' '100.0']"
         # Fix the format by adding commas between elements
         dataString = dataString.replace(" ", " , ")
+        dataString = dataString.replace("\n", "")
         fixed_data_string = dataString.replace("']['", "'],['")
         
         # Now use ast.literal_eval
