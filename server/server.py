@@ -4,6 +4,7 @@ import numpy as np
 import ast
 import re
 import csv
+import json
 
 
 server_socket = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
@@ -24,32 +25,31 @@ try:
         if not data:
             break
         dataString = data.decode()
-        # dataString format: "['11/13/23 19:32:19' 'HR2' 'external' '100.0' '100.0' '100.0']['11/13/23 19:32:19' 'HR2' 'external' '100.0' '100.0' '100.0']['11/13/23 19:32:19' 'HR2' 'external' '100.0' '100.0' '100.0']"
+        print("datastring ",dataString)
+        # dataString format: "['11/13/23-19:32:19' 'HR2' 'external' '100.0' '100.0' '100.0']['11/13/23 19:32:19' 'HR2' 'external' '100.0' '100.0' '100.0']['11/13/23 19:32:19' 'HR2' 'external' '100.0' '100.0' '100.0']"
         # Fix the format by adding commas between elements
         dataString = dataString.replace(" ", " , ")
         dataString = dataString.replace("\n", "")
         fixed_data_string = dataString.replace("']['", "'],['")
-        
-        # Now use ast.literal_eval
+        fixed_data_string = fixed_data_string.replace(", ,",",")
+        fixed_data_string = fixed_data_string.replace("-"," ")
+
+        print("fixed datastr ",fixed_data_string)
+
         data_list = ast.literal_eval(f"[{fixed_data_string}]")
-        
-        modified_data_list = [[inner[0].replace(',', ' ').split()[0] + ' ' + inner[0].replace(',', ' ').split()[1], inner[1]] + inner[2:] for inner in data_list]
-        
-        # Separate the list of lists into three arrays
-        array1, array2, array3 = modified_data_list
 
- 
-print("Array 1:", array1)
-print("Array 2:", array2)
-print("Array 3:", array3)
+        csv_buffer = []
 
-        
+        # Convert each inner list to a CSV row
+        for inner in data_list:
+            csv_buffer.append([item.replace(', ,', '') for item in inner])
+
+        # Write the CSV data to a file (or do anything else with it)
         with open('output.csv', 'w', newline='') as csvfile:
             csv_writer = csv.writer(csvfile)
-            csv_writer.writerows(result)
+            csv_writer.writerows(csv_buffer)
+        print("done")
 
-        # Send data back to the client
-        # client_socket.send("Hello, client!".encode())
         break
 
 except Exception as e:
