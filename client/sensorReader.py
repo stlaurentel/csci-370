@@ -121,9 +121,9 @@ def readHeartData(sampleDuration=10):
             runningTotal /= 10                     # average the last 10 IBI values
             BPM = 60000/runningTotal               # how many beats can fit into a minute? that's BPM!
             print(f"BPM {BPM}")
-            bpmArray = np.append(bpmArray, str(BPM))    # need to cast to string, since we are also sending timestamp
-            motherBpmArray = np.append(motherBpmArray, str(BPM)) # TODO: Read from separate sensor. Currently using the same exact sensor as HR2
-            uterineArray = np.append(uterineArray, str(uterineSignal))    # Currently just the voltage read by the ADC from the uterine sensor
+            bpmArray = np.append(bpmArray, f"{BPM:.3f}")    # need to cast to string, since we are also sending timestamp
+            motherBpmArray = np.append(motherBpmArray, f"{BPM:.3f}") # TODO: Read from separate sensor. Currently using the same exact sensor as HR2
+            uterineArray = np.append(uterineArray, f"{uterineSignal:.3f}"))    # Currently just the voltage read by the ADC from the uterine sensor
 
         if Signal < thresh and Pulse:   # when the values are going down, the beat is over
             Pulse = False                         # reset the Pulse flag so we can do it again
